@@ -1,0 +1,49 @@
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: shortpingoo-app
+#   namespace: argocd
+# spec:
+#   project: default
+#   source:
+#     repoURL: 'https://git-codecommit.ap-northeast-2.amazonaws.com/v1/repos/HelmChart-for-Argo'
+#     targetRevision: main
+#     path: helm-charts
+#     helm:
+#       parameters:
+#         # Backend 이미지 설정
+#         - name: backend.image.repository
+#           value: "565393064007.dkr.ecr.ap-northeast-2.amazonaws.com/backend-users-ecr"
+#         - name: backend.image.tag
+#           value: "latest"  # 최신 버전 사용
+#         - name: backend.image.pullPolicy
+#           value: "Always"
+#         - name: backend.service.type
+#           value: "LoadBalancer"
+#         - name: backend.service.port
+#           value: "8080"
+
+#         # Frontend 이미지 설정
+#         - name: frontend.image.repository
+#           value: "565393064007.dkr.ecr.ap-northeast-2.amazonaws.com/frontend-ecr"
+#         - name: frontend.image.tag
+#           value: "latest"  # 최신 버전 사용
+#         - name: frontend.image.pullPolicy
+#           value: "Always"
+#         - name: frontend.service.type
+#           value: "LoadBalancer"
+#         - name: frontend.service.port
+#           value: "80"
+
+#         # Ingress 설정
+#         - name: ingress.awsCertArn
+#           value: "{{ .Values.awsCertArn | default (lookup 'v1' 'Secret' 'shortpingoo' 'aws-cert').data.awsCertArn | b64dec }}"
+#         - name: ingress.hostName
+#           value: "shortpingoo.shop"
+#   destination:
+#     server: 'https://kubernetes.default.svc'
+#     namespace: shortpingoo
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true

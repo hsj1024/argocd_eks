@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: shortpingoo-app
+  namespace: argocd
+spec:
+  project: default  # 기본 프로젝트
+
+  # 소스 설정: S3에서 Helm 차트를 가져오고, GitHub에서 values.yaml을 가져옵니다.
+  source:
+    repoURL: http://argocd-helm-repo.s3-website.ap-northeast-2.amazonaws.com  # S3에서 Helm 차트 가져오기
+    targetRevision: 0.1.0  # 사용할 Helm 차트 버전 (S3에 저장된 tgz 파일의 버전)
+    chart: shortpingoo  # S3에 업로드된 Helm 차트 이름
+    helm:
+      valueFiles:
+        - https://raw.githubusercontent.com/SK-Rookies-Final3/HelmChart-for-Argo/main/helm-charts/values.yaml  # GitHub에서 values.yaml 파일 경로
+
+  # 배포 대상 설정
+  destination:
+    server: https://kubernetes.default.svc  # EKS 클러스터 URL
+    namespace: shortpingoo  # 배포할 네임스페이스
+
+  # 동기화 정책
+  syncPolicy:
+    automated:
+      prune: true  # 이전 버전에서 제거된 리소스를 자동으로 삭제
+      selfHeal: true  # 애플리케이션이 변경되거나 손상될 경우 자동으로 복구
+    syncOptions:
+      - CreateNamespace=false  # 네임스페이스가 없으면 자동으로 생성하지 않음

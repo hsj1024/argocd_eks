@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backend-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://git-codecommit.ap-northeast-2.amazonaws.com/v1/repos/deployment-repo'  # 공통 배포 레포지토리 (Helm 차트 저장소)
+    targetRevision: HEAD
+    path: helm-charts/backend
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: backend-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+

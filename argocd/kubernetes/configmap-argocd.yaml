@@ -1,0 +1,14 @@
+# Argo CD 설정용 ConfigMap으로, Argo CD가 접근할 CodeCommit 레포지토리의 인증 정보가 포함되어 있습니다.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+data:
+  url: "https://shortpingoo.shop"  # 외부 도메인 URL로 설정
+  server.insecure: "true"
+  repositories: |
+    - url: https://git-codecommit.ap-northeast-2.amazonaws.com/v1/repos/HelmChart-for-Argo
+      username: "AKIAYHJANQBD4XK6UIN2"
+      password: "t0kYJilUifev83CH5pAoTDsAM22qa8fSdsUAhDP7"
